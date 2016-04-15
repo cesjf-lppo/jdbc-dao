@@ -4,6 +4,6 @@ CREATE TABLE estabelecimento
 	nome VARCHAR(250) NOT NULL,
 	endereco VARCHAR(32672) NOT NULL,
 	votos INT NOT NULL DEFAULT 0,
-        CONSTRAINT PRIMARY KEY(id)
+        PRIMARY KEY(id)
 );
 
