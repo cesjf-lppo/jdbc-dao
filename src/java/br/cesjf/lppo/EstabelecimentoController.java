@@ -3,6 +3,8 @@ package br.cesjf.lppo;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,7 +25,13 @@ public class EstabelecimentoController extends HttpServlet {
         if (request.getRequestURI().contains("listar.html")) {
             List<Estabelecimento> lista = new ArrayList<>();
             EstabelecimentoDAO dao = new EstabelecimentoDAO();
-            lista = dao.listaTodos();
+            try {
+                lista = dao.listaTodos();
+            } catch (Exception ex) {
+                Logger.getLogger(EstabelecimentoController.class.getName()).log(Level.SEVERE, null, ex);
+                lista =  new ArrayList<Estabelecimento>();
+                request.setAttribute("erro", "Problema ao listar os estabelecimentos!");
+            }
 
             request.setAttribute("estabelecimentos", lista);
             request.getRequestDispatcher("/WEB-INF/listar.jsp").forward(request, response);
@@ -41,7 +49,14 @@ public class EstabelecimentoController extends HttpServlet {
             novoEstab.setEndereco(request.getParameter("endereco"));
             
             EstabelecimentoDAO dao = new EstabelecimentoDAO();
-            dao.criar(novoEstab);
+            try {
+                dao.criar(novoEstab);
+            } catch (Exception ex) {
+                Logger.getLogger(EstabelecimentoController.class.getName()).log(Level.SEVERE, null, ex);
+                response.sendRedirect("listar.html?erro=Erro ao criar o Estabelecimento!");
+                return;
+                
+            }
             
             response.sendRedirect("listar.html");
         }

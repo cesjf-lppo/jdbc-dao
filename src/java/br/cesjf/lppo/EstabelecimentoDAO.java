@@ -12,10 +12,10 @@ import java.util.logging.Logger;
 
 public class EstabelecimentoDAO {
 
-    List<Estabelecimento> listaTodos() {
+    List<Estabelecimento> listaTodos() throws Exception {
         List<Estabelecimento> todos = new ArrayList<>();
         try {
-            Connection conexao = DriverManager.getConnection("jdbc:derby://localhost:1527/lppo-2016-1", "usuario", "senha");
+            Connection conexao = ConexaoJDBC.getInstance();
             Statement operacao = conexao.createStatement();
             ResultSet resultado = operacao.executeQuery("SELECT * FROM estabelecimento");
             while (resultado.next()) {
@@ -29,19 +29,21 @@ public class EstabelecimentoDAO {
 
         } catch (SQLException ex) {
             Logger.getLogger(EstabelecimentoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception(ex);
         }
 
         return todos;
     }
 
-    void criar(Estabelecimento novoEstab) {
+    void criar(Estabelecimento novoEstab) throws Exception {
         try {
-            Connection conexao = DriverManager.getConnection("jdbc:derby://localhost:1527/lppo-2016-1", "usuario", "senha");
+            Connection conexao = ConexaoJDBC.getInstance();
             Statement operacao = conexao.createStatement();
             operacao.executeUpdate(String.format("INSERT INTO estabelecimento(nome, endereco) VALUES('%s','%s')", novoEstab.getNome(), novoEstab.getEndereco()));
 
         } catch (SQLException ex) {
             Logger.getLogger(EstabelecimentoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception(ex);
         }
     }
 

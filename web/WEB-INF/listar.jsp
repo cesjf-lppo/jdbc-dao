@@ -8,6 +8,9 @@
         <title>Listar Estabelecimentos</title>
     </head>
     <body>
+        <c:if test="${erro != null}">
+            <div style="border: 1px solid red;">${erro}</div>
+        </c:if>
         <h1>Listar Estabelecimentos</h1>
         <table>
             <thead>
