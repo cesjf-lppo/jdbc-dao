@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author igor
  */
 @WebServlet(name = "EstabelecimentoController", 
-        urlPatterns = {"/listar.html","/novo.html"})
+        urlPatterns = {"/listar.html","/novo.html","/excluir.html"})
 public class EstabelecimentoController extends HttpServlet {
 
     @Override
@@ -38,6 +38,11 @@ public class EstabelecimentoController extends HttpServlet {
         } else if (request.getRequestURI().contains("novo.html")) {
             request.getRequestDispatcher("/WEB-INF/novo.jsp").forward(request, response);
 
+        } else if (request.getRequestURI().contains("excluir.html")) {
+            Long id = Long.parseLong(request.getParameter("id"));
+            EstabelecimentoDAO dao = new EstabelecimentoDAO();
+            dao.excluirPorId(id);
+            response.sendRedirect("listar.html");
         }
     }
 

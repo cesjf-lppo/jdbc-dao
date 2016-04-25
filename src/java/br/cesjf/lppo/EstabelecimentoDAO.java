@@ -47,4 +47,15 @@ public class EstabelecimentoDAO {
         }
     }
 
+    void excluirPorId(Long id) throws Exception {
+        try {
+            Connection conexao = ConexaoJDBC.getInstance();
+            Statement operacao = conexao.createStatement();
+            operacao.executeUpdate("DELETE FROM estabelecimento WHERE id="+id);
+        } catch (SQLException ex) {
+            Logger.getLogger(EstabelecimentoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception(ex);        }
+        
+    }
+
 }

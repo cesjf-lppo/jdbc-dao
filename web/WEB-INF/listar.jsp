@@ -19,6 +19,7 @@
                     <th>Votos</th>
                     <th>Nome</th>
                     <th>Endereço</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,6 +29,7 @@
                         <td>${estabelecimento.votos}</td>
                         <td>${estabelecimento.nome}</td>
                         <td>${estabelecimento.endereco}</td>
+                        <td>[<a href="excluir.html?id=${estabelecimento.id}">x</a>]</td>
                     </tr>
                 </c:forEach>
             </tbody>
