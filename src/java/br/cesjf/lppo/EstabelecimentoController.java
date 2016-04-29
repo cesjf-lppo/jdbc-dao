@@ -72,8 +72,9 @@ public class EstabelecimentoController extends HttpServlet {
             novoEstab.setNome(request.getParameter("nome"));
             novoEstab.setEndereco(request.getParameter("endereco"));
 
-            EstabelecimentoDAO dao = new EstabelecimentoDAO();
-            try {
+        try {
+            EstabelecimentoDAOPrep dao = new EstabelecimentoDAOPrep();
+
                 dao.criar(novoEstab);
             } catch (Exception ex) {
                 Logger.getLogger(EstabelecimentoController.class.getName()).log(Level.SEVERE, null, ex);

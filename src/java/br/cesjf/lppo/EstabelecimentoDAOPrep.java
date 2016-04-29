@@ -12,10 +12,13 @@ import java.util.logging.Logger;
 
 public class EstabelecimentoDAOPrep {
         private PreparedStatement operacaoListarTodos;
-
+        private PreparedStatement operacaoCriar;
+        
     public EstabelecimentoDAOPrep() throws Exception {
             try {
                 operacaoListarTodos = ConexaoJDBC.getInstance().prepareStatement("SELECT * FROM estabelecimento");
+                operacaoCriar = ConexaoJDBC.getInstance().prepareStatement("INSERT INTO estabelecimento(nome, endereco) VALUES(?, ?)", new String[]{"id"});
+
             } catch (SQLException ex) {
                 Logger.getLogger(EstabelecimentoDAOPrep.class.getName()).log(Level.SEVERE, null, ex);
                 throw new Exception(ex);
@@ -46,18 +49,11 @@ public class EstabelecimentoDAOPrep {
 
     void criar(Estabelecimento novoEstab) throws Exception {
         try {
-            System.out.println("Antes de criar:" + novoEstab);
-            Connection conexao = ConexaoJDBC.getInstance();
-            Statement operacao = conexao.createStatement();
-            operacao.executeUpdate(
-                    String.format(
-                            "INSERT INTO estabelecimento(nome, endereco) VALUES('%s','%s')",
-                            novoEstab.getNome(),
-                            novoEstab.getEndereco()
-                    ),
-                    new String[]{"id"}
-            );
-            ResultSet keys = operacao.getGeneratedKeys();
+            System.out.println("Antes de criar:" + novoEstab);            
+            operacaoCriar.setString(1, novoEstab.getNome());
+            operacaoCriar.setString(2, novoEstab.getEndereco());
+            operacaoCriar.executeUpdate();
+            ResultSet keys = operacaoCriar.getGeneratedKeys();
             if (keys.next()) {
                 novoEstab.setId(keys.getLong(1));
             }
