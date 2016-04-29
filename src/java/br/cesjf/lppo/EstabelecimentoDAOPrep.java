@@ -1,6 +1,7 @@
 package br.cesjf.lppo;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -10,13 +11,22 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class EstabelecimentoDAOPrep {
+        private PreparedStatement operacaoListarTodos;
 
+    public EstabelecimentoDAOPrep() throws Exception {
+            try {
+                operacaoListarTodos = ConexaoJDBC.getInstance().prepareStatement("SELECT * FROM estabelecimento");
+            } catch (SQLException ex) {
+                Logger.getLogger(EstabelecimentoDAOPrep.class.getName()).log(Level.SEVERE, null, ex);
+                throw new Exception(ex);
+            }
+    }
+        
+        
     List<Estabelecimento> listaTodos() throws Exception {
         List<Estabelecimento> todos = new ArrayList<>();
         try {
-            Connection conexao = ConexaoJDBC.getInstance();
-            Statement operacao = conexao.createStatement();
-            ResultSet resultado = operacao.executeQuery("SELECT * FROM estabelecimento");
+            ResultSet resultado = operacaoListarTodos.executeQuery();
             while (resultado.next()) {
                 Estabelecimento estab = new Estabelecimento();
                 estab.setId(resultado.getLong("id"));
