@@ -24,7 +24,7 @@ public class EstabelecimentoController extends HttpServlet {
             throws ServletException, IOException {
         if (request.getRequestURI().contains("listar.html")) {
             List<Estabelecimento> lista = new ArrayList<>();
-            EstabelecimentoDAO dao = new EstabelecimentoDAO();
+            EstabelecimentoDAOPrep dao = new EstabelecimentoDAOPrep();
             try {
                 lista = dao.listaTodos();
             } catch (Exception ex) {
