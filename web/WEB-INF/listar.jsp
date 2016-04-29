@@ -8,6 +8,7 @@
         <title>Listar Estabelecimentos</title>
     </head>
     <body>
+        <jsp:include page="fragments/menu.jspf" />
         <c:if test="${erro != null}">
             <div style="border: 1px solid red;">${erro}</div>
         </c:if>
@@ -25,7 +26,7 @@
             <tbody>
                 <c:forEach items="${estabelecimentos}" var="estabelecimento">
                     <tr>
-                        <td>${estabelecimento.id}</td>
+                        <td><a href="editar.html?id=${estabelecimento.id}">${estabelecimento.id}</a></td>
                         <td>${estabelecimento.votos}</td>
                         <td>${estabelecimento.nome}</td>
                         <td>${estabelecimento.endereco}</td>

@@ -6,6 +6,7 @@
         <title>Novo Estabelecimento</title>
     </head>
     <body>
+        <jsp:include page="fragments/menu.jspf" />
         <h1>Novo Estabelecimento</h1>
         <form method="post">
             <div>
