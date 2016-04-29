@@ -4,7 +4,7 @@ public class Estabelecimento {
     private Long id;
     private String nome;
     private String endereco;
-    private Integer votos;
+    private Integer votos = 0;
 
     public Long getId() {
         return id;
@@ -36,6 +36,11 @@ public class Estabelecimento {
 
     public void setVotos(Integer votos) {
         this.votos = votos;
+    }
+
+    @Override
+    public String toString() {
+        return "Estabelecimento{" + "id=" + id + ", nome=" + nome + ", endereco=" + endereco + ", votos=" + votos + '}';
     }
     
     

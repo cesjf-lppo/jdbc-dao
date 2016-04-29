@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author igor
  */
-@WebServlet(name = "EstabelecimentoController", 
-        urlPatterns = {"/listar.html","/novo.html","/excluir.html"})
+@WebServlet(name = "EstabelecimentoController",
+        urlPatterns = {"/listar.html", "/novo.html", "/excluir.html", "/editar.html"})
 public class EstabelecimentoController extends HttpServlet {
 
     @Override
@@ -29,7 +29,7 @@ public class EstabelecimentoController extends HttpServlet {
                 lista = dao.listaTodos();
             } catch (Exception ex) {
                 Logger.getLogger(EstabelecimentoController.class.getName()).log(Level.SEVERE, null, ex);
-                lista =  new ArrayList<Estabelecimento>();
+                lista = new ArrayList<Estabelecimento>();
                 request.setAttribute("erro", "Problema ao listar os estabelecimentos!");
             }
 
@@ -41,18 +41,37 @@ public class EstabelecimentoController extends HttpServlet {
         } else if (request.getRequestURI().contains("excluir.html")) {
             Long id = Long.parseLong(request.getParameter("id"));
             EstabelecimentoDAO dao = new EstabelecimentoDAO();
-            dao.excluirPorId(id);
+            try {
+                dao.excluirPorId(id);
+            } catch (Exception ex) {
+                Logger.getLogger(EstabelecimentoController.class.getName()).log(Level.SEVERE, null, ex);
+            }
             response.sendRedirect("listar.html");
+        } else if (request.getRequestURI().contains("editar.html")) {
+            Long id = Long.parseLong(request.getParameter("id"));
+            EstabelecimentoDAO dao = new EstabelecimentoDAO();
+            try {
+                Estabelecimento estab = dao.buscaPorId(id);
+                if (estab != null) {
+                    request.setAttribute("estabelecimento", estab);
+                    request.getRequestDispatcher("/WEB-INF/editar.jsp").forward(request, response);
+                    return;
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(EstabelecimentoController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            response.sendRedirect("listar.html");
+
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if(request.getRequestURI().contains("novo.html")){
+        if (request.getRequestURI().contains("novo.html")) {
             Estabelecimento novoEstab = new Estabelecimento();
             novoEstab.setNome(request.getParameter("nome"));
             novoEstab.setEndereco(request.getParameter("endereco"));
-            
+
             EstabelecimentoDAO dao = new EstabelecimentoDAO();
             try {
                 dao.criar(novoEstab);
@@ -60,14 +79,29 @@ public class EstabelecimentoController extends HttpServlet {
                 Logger.getLogger(EstabelecimentoController.class.getName()).log(Level.SEVERE, null, ex);
                 response.sendRedirect("listar.html?erro=Erro ao criar o Estabelecimento!");
                 return;
-                
+
             }
-            
+
             response.sendRedirect("listar.html");
+        } else if (request.getRequestURI().contains("editar.html")) {
+            Long id = Long.parseLong(request.getParameter(
+                    "id"));
+            try {
+                EstabelecimentoDAO dao = new EstabelecimentoDAO();
+                Estabelecimento estab = dao.buscaPorId(id);
+                if (estab != null) {
+                    estab.setNome(request.getParameter("nome"));
+                    estab.setEndereco(request.getParameter("endereco"));
+                    estab.setVotos(Integer.parseInt(request.getParameter("votos")));
+                    dao.salvar(estab);
+                    response.sendRedirect("listar.html");
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(EstabelecimentoController.class.getName()).log(Level.SEVERE, null, ex);
+                response.sendRedirect("editar.html?id=" + id);
+            }
         }
     }
-    
-    
 
     @Override
     public String getServletInfo() {
