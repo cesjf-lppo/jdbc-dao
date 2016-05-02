@@ -40,8 +40,8 @@ public class EstabelecimentoController extends HttpServlet {
 
         } else if (request.getRequestURI().contains("excluir.html")) {
             Long id = Long.parseLong(request.getParameter("id"));
-            EstabelecimentoDAO dao = new EstabelecimentoDAO();
             try {
+                EstabelecimentoDAOPrep dao = new    EstabelecimentoDAOPrep();
                 dao.excluirPorId(id);
             } catch (Exception ex) {
                 Logger.getLogger(EstabelecimentoController.class.getName()).log(Level.SEVERE, null, ex);

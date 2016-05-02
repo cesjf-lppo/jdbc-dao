@@ -13,11 +13,14 @@ import java.util.logging.Logger;
 public class EstabelecimentoDAOPrep {
         private PreparedStatement operacaoListarTodos;
         private PreparedStatement operacaoCriar;
+        private PreparedStatement operacaoExcluirPorId;
+
         
     public EstabelecimentoDAOPrep() throws Exception {
             try {
                 operacaoListarTodos = ConexaoJDBC.getInstance().prepareStatement("SELECT * FROM estabelecimento");
                 operacaoCriar = ConexaoJDBC.getInstance().prepareStatement("INSERT INTO estabelecimento(nome, endereco) VALUES(?, ?)", new String[]{"id"});
+                operacaoExcluirPorId = operacaoExcluirPorId = ConexaoJDBC.getInstance().prepareStatement("DELETE FROM estabelecimento WHERE id=?");
 
             } catch (SQLException ex) {
                 Logger.getLogger(EstabelecimentoDAOPrep.class.getName()).log(Level.SEVERE, null, ex);
@@ -66,9 +69,8 @@ public class EstabelecimentoDAOPrep {
 
     void excluirPorId(Long id) throws Exception {
         try {
-            Connection conexao = ConexaoJDBC.getInstance();
-            Statement operacao = conexao.createStatement();
-            operacao.executeUpdate("DELETE FROM estabelecimento WHERE id=" + id);
+            operacaoExcluirPorId.setLong(1, id);
+            operacaoExcluirPorId.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(EstabelecimentoDAOPrep.class.getName()).log(Level.SEVERE, null, ex);
             throw new Exception(ex);
