@@ -9,8 +9,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class EstabelecimentoDAOJDBC {
+public class EstabelecimentoDAOJDBC implements EstabelecimentoDAO {
 
+    @Override
     public List<Estabelecimento> listaTodos() throws Exception {
         List<Estabelecimento> todos = new ArrayList<>();
         try {
@@ -34,6 +35,7 @@ public class EstabelecimentoDAOJDBC {
         return todos;
     }
 
+    @Override
     public void criar(Estabelecimento novoEstab) throws Exception {
         try {
             System.out.println("Antes de criar:" + novoEstab);
@@ -58,6 +60,7 @@ public class EstabelecimentoDAOJDBC {
         }
     }
 
+    @Override
     public void excluirPorId(Long id) throws Exception {
         try {
             Connection conexao = ConexaoJDBC.getInstance();
@@ -70,10 +73,12 @@ public class EstabelecimentoDAOJDBC {
 
     }
 
+    @Override
     public void excluir(Estabelecimento estab) throws Exception {
         excluirPorId(estab.getId());
     }
 
+    @Override
     public void salvar(Estabelecimento estab) throws Exception {
         Connection conexao = ConexaoJDBC.getInstance();
         Statement operacao = conexao.createStatement();
@@ -84,6 +89,7 @@ public class EstabelecimentoDAOJDBC {
         }
     }
     
+    @Override
     public Estabelecimento buscaPorId(Long id) throws Exception {
         Estabelecimento estab = null;
         try {

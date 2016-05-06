@@ -10,25 +10,25 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class EstabelecimentoDAOJDBCPrep {
-        private PreparedStatement operacaoListarTodos;
-        private PreparedStatement operacaoCriar;
-        private PreparedStatement operacaoExcluirPorId;
+public class EstabelecimentoDAOJDBCPrep implements EstabelecimentoDAO {
 
-        
+    private PreparedStatement operacaoListarTodos;
+    private PreparedStatement operacaoCriar;
+    private PreparedStatement operacaoExcluirPorId;
+
     public EstabelecimentoDAOJDBCPrep() throws Exception {
-            try {
-                operacaoListarTodos = ConexaoJDBC.getInstance().prepareStatement("SELECT * FROM estabelecimento");
-                operacaoCriar = ConexaoJDBC.getInstance().prepareStatement("INSERT INTO estabelecimento(nome, endereco) VALUES(?, ?)", new String[]{"id"});
-                operacaoExcluirPorId = operacaoExcluirPorId = ConexaoJDBC.getInstance().prepareStatement("DELETE FROM estabelecimento WHERE id=?");
+        try {
+            operacaoListarTodos = ConexaoJDBC.getInstance().prepareStatement("SELECT * FROM estabelecimento");
+            operacaoCriar = ConexaoJDBC.getInstance().prepareStatement("INSERT INTO estabelecimento(nome, endereco) VALUES(?, ?)", new String[]{"id"});
+            operacaoExcluirPorId = operacaoExcluirPorId = ConexaoJDBC.getInstance().prepareStatement("DELETE FROM estabelecimento WHERE id=?");
 
-            } catch (SQLException ex) {
-                Logger.getLogger(EstabelecimentoDAOJDBCPrep.class.getName()).log(Level.SEVERE, null, ex);
-                throw new Exception(ex);
-            }
+        } catch (SQLException ex) {
+            Logger.getLogger(EstabelecimentoDAOJDBCPrep.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception(ex);
+        }
     }
-        
-        
+
+    @Override
     public List<Estabelecimento> listaTodos() throws Exception {
         List<Estabelecimento> todos = new ArrayList<>();
         try {
@@ -50,9 +50,10 @@ public class EstabelecimentoDAOJDBCPrep {
         return todos;
     }
 
+    @Override
     public void criar(Estabelecimento novoEstab) throws Exception {
         try {
-            System.out.println("Antes de criar:" + novoEstab);            
+            System.out.println("Antes de criar:" + novoEstab);
             operacaoCriar.setString(1, novoEstab.getNome());
             operacaoCriar.setString(2, novoEstab.getEndereco());
             operacaoCriar.executeUpdate();
@@ -67,6 +68,7 @@ public class EstabelecimentoDAOJDBCPrep {
         }
     }
 
+    @Override
     public void excluirPorId(Long id) throws Exception {
         try {
             operacaoExcluirPorId.setLong(1, id);
@@ -78,10 +80,12 @@ public class EstabelecimentoDAOJDBCPrep {
 
     }
 
+    @Override
     public void excluir(Estabelecimento estab) throws Exception {
         excluirPorId(estab.getId());
     }
 
+    @Override
     public void salvar(Estabelecimento estab) throws Exception {
         Connection conexao = ConexaoJDBC.getInstance();
         Statement operacao = conexao.createStatement();
@@ -91,7 +95,8 @@ public class EstabelecimentoDAOJDBCPrep {
             throw new Exception(ex);
         }
     }
-    
+
+    @Override
     public Estabelecimento buscaPorId(Long id) throws Exception {
         Estabelecimento estab = null;
         try {
@@ -111,7 +116,5 @@ public class EstabelecimentoDAOJDBCPrep {
         }
         return estab;
     }
-    
-    
-    
+
 }
