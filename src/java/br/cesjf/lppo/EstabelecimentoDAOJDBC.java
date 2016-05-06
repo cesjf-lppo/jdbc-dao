@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 public class EstabelecimentoDAOJDBC {
 
-    List<Estabelecimento> listaTodos() throws Exception {
+    public List<Estabelecimento> listaTodos() throws Exception {
         List<Estabelecimento> todos = new ArrayList<>();
         try {
             Connection conexao = ConexaoJDBC.getInstance();
@@ -34,7 +34,7 @@ public class EstabelecimentoDAOJDBC {
         return todos;
     }
 
-    void criar(Estabelecimento novoEstab) throws Exception {
+    public void criar(Estabelecimento novoEstab) throws Exception {
         try {
             System.out.println("Antes de criar:" + novoEstab);
             Connection conexao = ConexaoJDBC.getInstance();
@@ -58,7 +58,7 @@ public class EstabelecimentoDAOJDBC {
         }
     }
 
-    void excluirPorId(Long id) throws Exception {
+    public void excluirPorId(Long id) throws Exception {
         try {
             Connection conexao = ConexaoJDBC.getInstance();
             Statement operacao = conexao.createStatement();
@@ -70,11 +70,11 @@ public class EstabelecimentoDAOJDBC {
 
     }
 
-    void excluir(Estabelecimento estab) throws Exception {
+    public void excluir(Estabelecimento estab) throws Exception {
         excluirPorId(estab.getId());
     }
 
-    void salvar(Estabelecimento estab) throws Exception {
+    public void salvar(Estabelecimento estab) throws Exception {
         Connection conexao = ConexaoJDBC.getInstance();
         Statement operacao = conexao.createStatement();
         try {
@@ -84,7 +84,7 @@ public class EstabelecimentoDAOJDBC {
         }
     }
     
-    Estabelecimento buscaPorId(Long id) throws Exception {
+    public Estabelecimento buscaPorId(Long id) throws Exception {
         Estabelecimento estab = null;
         try {
             Connection conexao = ConexaoJDBC.getInstance();
