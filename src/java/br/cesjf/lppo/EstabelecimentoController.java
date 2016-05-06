@@ -25,7 +25,7 @@ public class EstabelecimentoController extends HttpServlet {
         if (request.getRequestURI().contains("listar.html")) {
             List<Estabelecimento> lista = new ArrayList<>();
             try {
-                EstabelecimentoDAOPrep dao = new EstabelecimentoDAOPrep();
+                EstabelecimentoDAOJDBCPrep dao = new EstabelecimentoDAOJDBCPrep();
                 lista = dao.listaTodos();
             } catch (Exception ex) {
                 Logger.getLogger(EstabelecimentoController.class.getName()).log(Level.SEVERE, null, ex);
@@ -41,7 +41,7 @@ public class EstabelecimentoController extends HttpServlet {
         } else if (request.getRequestURI().contains("excluir.html")) {
             Long id = Long.parseLong(request.getParameter("id"));
             try {
-                EstabelecimentoDAOPrep dao = new    EstabelecimentoDAOPrep();
+                EstabelecimentoDAOJDBCPrep dao = new    EstabelecimentoDAOJDBCPrep();
                 dao.excluirPorId(id);
             } catch (Exception ex) {
                 Logger.getLogger(EstabelecimentoController.class.getName()).log(Level.SEVERE, null, ex);
@@ -49,7 +49,7 @@ public class EstabelecimentoController extends HttpServlet {
             response.sendRedirect("listar.html");
         } else if (request.getRequestURI().contains("editar.html")) {
             Long id = Long.parseLong(request.getParameter("id"));
-            EstabelecimentoDAO dao = new EstabelecimentoDAO();
+            EstabelecimentoDAOJDBC dao = new EstabelecimentoDAOJDBC();
             try {
                 Estabelecimento estab = dao.buscaPorId(id);
                 if (estab != null) {
@@ -73,7 +73,7 @@ public class EstabelecimentoController extends HttpServlet {
             novoEstab.setEndereco(request.getParameter("endereco"));
 
         try {
-            EstabelecimentoDAOPrep dao = new EstabelecimentoDAOPrep();
+            EstabelecimentoDAOJDBCPrep dao = new EstabelecimentoDAOJDBCPrep();
 
                 dao.criar(novoEstab);
             } catch (Exception ex) {
@@ -88,7 +88,7 @@ public class EstabelecimentoController extends HttpServlet {
             Long id = Long.parseLong(request.getParameter(
                     "id"));
             try {
-                EstabelecimentoDAO dao = new EstabelecimentoDAO();
+                EstabelecimentoDAOJDBC dao = new EstabelecimentoDAOJDBC();
                 Estabelecimento estab = dao.buscaPorId(id);
                 if (estab != null) {
                     estab.setNome(request.getParameter("nome"));

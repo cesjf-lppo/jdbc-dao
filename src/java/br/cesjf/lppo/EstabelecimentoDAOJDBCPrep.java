@@ -1,6 +1,7 @@
 package br.cesjf.lppo;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -9,14 +10,29 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class EstabelecimentoDAO {
+public class EstabelecimentoDAOJDBCPrep {
+        private PreparedStatement operacaoListarTodos;
+        private PreparedStatement operacaoCriar;
+        private PreparedStatement operacaoExcluirPorId;
 
+        
+    public EstabelecimentoDAOJDBCPrep() throws Exception {
+            try {
+                operacaoListarTodos = ConexaoJDBC.getInstance().prepareStatement("SELECT * FROM estabelecimento");
+                operacaoCriar = ConexaoJDBC.getInstance().prepareStatement("INSERT INTO estabelecimento(nome, endereco) VALUES(?, ?)", new String[]{"id"});
+                operacaoExcluirPorId = operacaoExcluirPorId = ConexaoJDBC.getInstance().prepareStatement("DELETE FROM estabelecimento WHERE id=?");
+
+            } catch (SQLException ex) {
+                Logger.getLogger(EstabelecimentoDAOJDBCPrep.class.getName()).log(Level.SEVERE, null, ex);
+                throw new Exception(ex);
+            }
+    }
+        
+        
     List<Estabelecimento> listaTodos() throws Exception {
         List<Estabelecimento> todos = new ArrayList<>();
         try {
-            Connection conexao = ConexaoJDBC.getInstance();
-            Statement operacao = conexao.createStatement();
-            ResultSet resultado = operacao.executeQuery("SELECT * FROM estabelecimento");
+            ResultSet resultado = operacaoListarTodos.executeQuery();
             while (resultado.next()) {
                 Estabelecimento estab = new Estabelecimento();
                 estab.setId(resultado.getLong("id"));
@@ -27,7 +43,7 @@ public class EstabelecimentoDAO {
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(EstabelecimentoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EstabelecimentoDAOJDBCPrep.class.getName()).log(Level.SEVERE, null, ex);
             throw new Exception(ex);
         }
 
@@ -36,35 +52,27 @@ public class EstabelecimentoDAO {
 
     void criar(Estabelecimento novoEstab) throws Exception {
         try {
-            System.out.println("Antes de criar:" + novoEstab);
-            Connection conexao = ConexaoJDBC.getInstance();
-            Statement operacao = conexao.createStatement();
-            operacao.executeUpdate(
-                    String.format(
-                            "INSERT INTO estabelecimento(nome, endereco) VALUES('%s','%s')",
-                            novoEstab.getNome(),
-                            novoEstab.getEndereco()
-                    ),
-                    new String[]{"id"}
-            );
-            ResultSet keys = operacao.getGeneratedKeys();
+            System.out.println("Antes de criar:" + novoEstab);            
+            operacaoCriar.setString(1, novoEstab.getNome());
+            operacaoCriar.setString(2, novoEstab.getEndereco());
+            operacaoCriar.executeUpdate();
+            ResultSet keys = operacaoCriar.getGeneratedKeys();
             if (keys.next()) {
                 novoEstab.setId(keys.getLong(1));
             }
             System.out.println("Depois de criar:" + novoEstab);
         } catch (SQLException ex) {
-            Logger.getLogger(EstabelecimentoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EstabelecimentoDAOJDBCPrep.class.getName()).log(Level.SEVERE, null, ex);
             throw new Exception(ex);
         }
     }
 
     void excluirPorId(Long id) throws Exception {
         try {
-            Connection conexao = ConexaoJDBC.getInstance();
-            Statement operacao = conexao.createStatement();
-            operacao.executeUpdate("DELETE FROM estabelecimento WHERE id=" + id);
+            operacaoExcluirPorId.setLong(1, id);
+            operacaoExcluirPorId.executeUpdate();
         } catch (SQLException ex) {
-            Logger.getLogger(EstabelecimentoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EstabelecimentoDAOJDBCPrep.class.getName()).log(Level.SEVERE, null, ex);
             throw new Exception(ex);
         }
 
@@ -98,7 +106,7 @@ public class EstabelecimentoDAO {
                 estab.setVotos(resultado.getInt("votos"));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(EstabelecimentoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EstabelecimentoDAOJDBCPrep.class.getName()).log(Level.SEVERE, null, ex);
             throw new Exception(ex);
         }
         return estab;
