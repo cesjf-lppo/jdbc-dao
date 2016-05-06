@@ -15,12 +15,18 @@ public class EstabelecimentoDAOJDBCPrep implements EstabelecimentoDAO {
     private PreparedStatement operacaoListarTodos;
     private PreparedStatement operacaoCriar;
     private PreparedStatement operacaoExcluirPorId;
+    private PreparedStatement operacaoSalvar;
+    private PreparedStatement operacaoBuscaPorId;
 
     public EstabelecimentoDAOJDBCPrep() throws Exception {
         try {
             operacaoListarTodos = ConexaoJDBC.getInstance().prepareStatement("SELECT * FROM estabelecimento");
             operacaoCriar = ConexaoJDBC.getInstance().prepareStatement("INSERT INTO estabelecimento(nome, endereco) VALUES(?, ?)", new String[]{"id"});
             operacaoExcluirPorId = operacaoExcluirPorId = ConexaoJDBC.getInstance().prepareStatement("DELETE FROM estabelecimento WHERE id=?");
+            operacaoSalvar = ConexaoJDBC.getInstance().prepareStatement("UPDATE estabelecimento SET nome=?, endereco=?, votos=? WHERE id=?");
+            operacaoBuscaPorId = ConexaoJDBC.getInstance().prepareStatement("SELECT * FROM estabelecimento WHERE id=?");
+
+
 
         } catch (SQLException ex) {
             Logger.getLogger(EstabelecimentoDAOJDBCPrep.class.getName()).log(Level.SEVERE, null, ex);
@@ -87,10 +93,12 @@ public class EstabelecimentoDAOJDBCPrep implements EstabelecimentoDAO {
 
     @Override
     public void salvar(Estabelecimento estab) throws Exception {
-        Connection conexao = ConexaoJDBC.getInstance();
-        Statement operacao = conexao.createStatement();
         try {
-            operacao.executeUpdate(String.format("UPDATE estabelecimento SET nome='%s', endereco='%s', votos=%d WHERE id=%d", estab.getNome(), estab.getEndereco(), estab.getVotos(), estab.getId()));
+            operacaoSalvar.setString(1, estab.getNome());
+            operacaoSalvar.setString(2,  estab.getEndereco());
+            operacaoSalvar.setInt(3,  estab.getVotos());
+            operacaoSalvar.setLong(4,  estab.getId());
+            operacaoSalvar.executeUpdate();
         } catch (SQLException ex) {
             throw new Exception(ex);
         }
@@ -100,9 +108,8 @@ public class EstabelecimentoDAOJDBCPrep implements EstabelecimentoDAO {
     public Estabelecimento buscaPorId(Long id) throws Exception {
         Estabelecimento estab = null;
         try {
-            Connection conexao = ConexaoJDBC.getInstance();
-            Statement operacao = conexao.createStatement();
-            ResultSet resultado = operacao.executeQuery(String.format("SELECT * FROM estabelecimento WHERE id=%d", id));
+            operacaoBuscaPorId.setLong(1, id);
+            ResultSet resultado = operacaoBuscaPorId.executeQuery();
             if (resultado.next()) {
                 estab = new Estabelecimento();
                 estab.setId(resultado.getLong("id"));
