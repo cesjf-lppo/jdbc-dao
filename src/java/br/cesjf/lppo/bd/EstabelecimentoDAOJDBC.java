@@ -1,5 +1,7 @@
-package br.cesjf.lppo;
+package br.cesjf.lppo.bd;
 
+import br.cesjf.lppo.ConexaoJDBC;
+import br.cesjf.lppo.Estabelecimento;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -1,5 +1,6 @@
-package br.cesjf.lppo;
+package br.cesjf.lppo.bd;
 
+import br.cesjf.lppo.Estabelecimento;
 import java.util.List;
 
 public interface EstabelecimentoDAO {
