@@ -1,7 +1,7 @@
 package br.cesjf.lppo;
 
-import br.cesjf.lppo.bd.EstabelecimentoDAOJDBCPrep;
 import br.cesjf.lppo.bd.EstabelecimentoDAO;
+import br.cesjf.lppo.bd.EstabelecimentoDAOFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public class EstabelecimentoController extends HttpServlet {
         if (request.getRequestURI().contains("listar.html")) {
             List<Estabelecimento> lista = new ArrayList<>();
             try {
-                EstabelecimentoDAO dao = new EstabelecimentoDAOJDBCPrep();
+                EstabelecimentoDAO dao = EstabelecimentoDAOFactory.getDAO();
                 lista = dao.listaTodos();
             } catch (Exception ex) {
                 Logger.getLogger(EstabelecimentoController.class.getName()).log(Level.SEVERE, null, ex);
@@ -43,7 +43,7 @@ public class EstabelecimentoController extends HttpServlet {
         } else if (request.getRequestURI().contains("excluir.html")) {
             Long id = Long.parseLong(request.getParameter("id"));
             try {
-                EstabelecimentoDAO dao = new EstabelecimentoDAOJDBCPrep();
+                EstabelecimentoDAO dao = EstabelecimentoDAOFactory.getDAO();
                 dao.excluirPorId(id);
             } catch (Exception ex) {
                 Logger.getLogger(EstabelecimentoController.class.getName()).log(Level.SEVERE, null, ex);
@@ -52,7 +52,7 @@ public class EstabelecimentoController extends HttpServlet {
         } else if (request.getRequestURI().contains("editar.html")) {
             Long id = Long.parseLong(request.getParameter("id"));
             try {
-                EstabelecimentoDAO dao = new EstabelecimentoDAOJDBCPrep();
+                EstabelecimentoDAO dao = EstabelecimentoDAOFactory.getDAO();
                 Estabelecimento estab = dao.buscaPorId(id);
                 if (estab != null) {
                     request.setAttribute("estabelecimento", estab);
@@ -75,7 +75,7 @@ public class EstabelecimentoController extends HttpServlet {
             novoEstab.setEndereco(request.getParameter("endereco"));
 
             try {
-                EstabelecimentoDAO dao = new EstabelecimentoDAOJDBCPrep();
+                EstabelecimentoDAO dao = EstabelecimentoDAOFactory.getDAO();
 
                 dao.criar(novoEstab);
             } catch (Exception ex) {
@@ -90,7 +90,7 @@ public class EstabelecimentoController extends HttpServlet {
             Long id = Long.parseLong(request.getParameter(
                     "id"));
             try {
-                EstabelecimentoDAO dao = new EstabelecimentoDAOJDBCPrep();
+                EstabelecimentoDAO dao = EstabelecimentoDAOFactory.getDAO();
                 Estabelecimento estab = dao.buscaPorId(id);
                 if (estab != null) {
                     estab.setNome(request.getParameter("nome"));
